@@ -1,0 +1,8 @@
+#!/bin/bash
+envdir=<%= svbase %>/env
+root=<%= rundir %>
+echo Starting <%= name %> from $root
+cd $root
+
+exec 2>&1
+exec chpst -e $envdir -u <%= user %>:<%= group %> <%= command %>
