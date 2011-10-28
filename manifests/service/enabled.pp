@@ -21,7 +21,9 @@ define runit::service::enabled( $ensure = present ) {
 
     exec { "sv restart ${name}":
       subscribe   => File["/etc/service/${name}"],
-      command     => "/usr/bin/sv -w 60 restart /etc/sv/${name}",
+      # we wait a few seconds just in case this is the firstmost service activation
+      # then the supervise directory need to be created (automically) by runit
+      command     => "/bin/sleep 3; /usr/bin/sv -w 60 restart /etc/sv/${name}",
       refreshonly => true,
     }
 
