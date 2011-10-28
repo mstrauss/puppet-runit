@@ -1,5 +1,5 @@
 #!/bin/sh
-logdir=$(<<%= svbase %>/env/Service_Root)/log/<%= name %>
-mkdir -p $logdir
-chown <%= user %>:<%= group %> $logdir
-exec chpst -u <%= user %>:<%= group %> svlogd -tt $logdir
+logdir=<%= logdir %>
+mkdir -p "${logdir}"
+chown <%= user %>:<%= group %> "${logdir}"
+exec chpst -u <%= user %>:<%= group %> svlogd -tt "${logdir}"
