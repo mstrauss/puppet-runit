@@ -3,12 +3,16 @@ define runit::service (
   $group   = root,       # the service's group name
   $enable  = true,       # shall the service be linked to /etc/service
   $ensure  = present,    # shall the service be present in /etc/sv
-  # either one of these three must be declared - it defines the content of the run script /etc/sv/$name/run
+  # start command - either one of these three must be declared - it defines the content of the run script /etc/sv/$name/run
   $command = undef,      # the most simple way;  just state command here - it may not daemonize itself,
                          # but rather stay in the foreground;  all output is logged automatically to $logdir/current
                          # this uses a default template which provides logging
   $source  = undef,      # specify a source file on your puppet master 
   $content = undef,      # specify the content directly (mostly via 'template')
+  # finish command - defines the content of the finish script /etc/sv/$name/finish
+  $finish_command = '',
+  $finish_source  = undef,
+  $finish_content = undef,
   # service directory - this is required if you use 'command'
   $rundir  = undef,
   # logging stuff
@@ -63,8 +67,17 @@ define runit::service (
       ensure  => $ensure,
       mode    => 755,
       ;
+    "${svbase}/finish":
+      content => $finish_content ? {
+        undef   => template('runit/finish.erb'),
+        default => $finish_content,
+      },
+      source  => $finish_source,
+      ensure  => $ensure,
+      mode    => 755,
+      ;
   }
-
+  
   # eventually enabling the service
   if $ensure == present and $enable == true {
     $_ensure_enabled = present
