@@ -14,8 +14,16 @@ define runit::service (
   # logging stuff
   $logger  = true,       # shall we setup an logging service;  if you use 'command' before, 
                          # all output from command will be logged automatically to $logdir/current
-  $logdir  = "${rundir}/log"
+  $_logdir  = undef
 ) {
+  
+  # using the following construct, because '$logdir = "${rundir}/log"' in the
+  # define statement produces compilation warnings  
+  if $_logdir == undef {
+    $logdir = "${rundir}/log"
+  } else {
+    $logdir = $_logdir
+  }
 
   # FixMe: Validate parameters
   # fail("Only one of 'command', 'content', or 'source' parameters is allowed")
