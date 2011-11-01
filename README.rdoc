@@ -1,0 +1,22 @@
+= README
+Author:: Markus Strauss (mailto:markus@itstrauss.eu)
+Version:: 0.1, 2011-10-27
+
+This is a very basic module to manage the runit[http://smarden.org/runit/] service supervisor.
+
+== Example Usage
+
+  class { 'runit': }
+
+  # define a environment variable, placed under /etc/sv/diaspora_worker/env/QUEUE
+  runit::env { 'QUEUE': service => 'diaspora_worker' }
+
+  # define a service unter /etc/sv/diaspora_worker
+  runit::service { "diaspora_worker":
+    user    => diaspora,                        # service user and group
+    group   => diaspora,
+    rundir  => '/var/rails/diaspora',           # service run directory
+    command => 'bundle exec rake resque:work',  # command to start the service
+    enable  => true,                            # enabling the service by
+                                                # linking it to /etc/services/
+  }
