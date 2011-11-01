@@ -13,7 +13,6 @@ define runit::service::env( $service, $value, $ensure = present ) {
     }
   }
   
-  # runit::directory { $envdir: }
   file { "${envdir}/${name}":
     ensure => $ensure,
     content => "${value}\n",
