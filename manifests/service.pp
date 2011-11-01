@@ -46,6 +46,7 @@ define runit::service (
         default => absent,
         },
         purge => true,
+        force => true,
       ;
     "${svbase}/run":
       content => $content ? {
