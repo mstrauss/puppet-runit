@@ -14,7 +14,8 @@ define runit::service (
   # logging stuff
   $logger  = true,       # shall we setup an logging service;  if you use 'command' before, 
                          # all output from command will be logged automatically to $logdir/current
-  $logdir  = "${rundir}/log"
+  $logdir  = "${rundir}/log",
+  $timeout = 7           # service restart/stop timeouts (only relevant for 'enabled' services)
 ) {
 
   # FixMe: Validate parameters
