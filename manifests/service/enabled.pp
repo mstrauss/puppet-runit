@@ -24,7 +24,7 @@ define runit::service::enabled( $ensure = present, $timeout ) {
       # last command is true, so this resource never fails
       command     => "/usr/bin/sv -w ${timeout} force-restart /etc/sv/${name}; true",
       # we desperately need the supervise directory to restart a service
-      onlyif      => "test -d '/etc/sv/${name}'/supervise",
+      onlyif      => "/usr/bin/test -d '/etc/sv/${name}'/supervise",
       refreshonly => true,
     }
 
@@ -43,7 +43,7 @@ define runit::service::enabled( $ensure = present, $timeout ) {
       # then the supervise directory need to be created (automically) by runit
       command     => "/usr/bin/sv -w ${timeout} force-shutdown /etc/sv/${name}; true",
       # when "/etc/sv/${name}" is not there, do not exec
-      onlyif      => "test -d '/etc/sv/${name}'",
+      onlyif      => "/usr/bin/test -d '/etc/sv/${name}'",
     }
     
     # if we have users/groups, we need to remove them AFTER stopping the server
