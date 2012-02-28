@@ -1,5 +1,5 @@
 #!/bin/sh
-logdir=<%= _logdir %>
+logdir="<%= _logdir %>"
 mkdir -p "${logdir}"
 chown <%= user %>:<%= group %> "${logdir}"
 exec chpst -u <%= user %>:<%= group %> svlogd -tt "${logdir}"
