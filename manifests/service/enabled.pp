@@ -2,7 +2,10 @@ define runit::service::enabled( $ensure = present, $timeout ) {
 
   # enabling the service by creating a symlink in /etc/service
   file { "/etc/service/${name}":
-    target => "/etc/sv/${name}",
+    target => $ensure ? {
+      present => "/etc/sv/${name}",
+      default => undef,
+    },
     ensure => $ensure ? {
       present => link,
       default => absent,
