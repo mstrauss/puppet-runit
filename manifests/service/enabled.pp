@@ -11,7 +11,7 @@ define runit::service::enabled( $ensure = present, $timeout ) {
       default => absent,
     },
   }
-  
+
   if $ensure == present {
 
     # subscribe to any run file changes
@@ -32,13 +32,13 @@ define runit::service::enabled( $ensure = present, $timeout ) {
     }
 
   } else {
-    
+
     # Stop the service in THIS sequence:
     #   1. remove /etc/services link
     #   2. force-shutdown /etc/sv/*
     #   3. remove /etc/sv stuff
     #   4. manage users, groups, whatever
-    
+
     exec { "sv exit ${name}":
       require     => File["/etc/service/${name}"],
       before      => File["/etc/sv/${name}"],
@@ -48,11 +48,10 @@ define runit::service::enabled( $ensure = present, $timeout ) {
       # when "/etc/sv/${name}" is not there, do not exec
       onlyif      => "/usr/bin/test -d '/etc/sv/${name}'",
     }
-    
+
     # if we have users/groups, we need to remove them AFTER stopping the server
     User  <||> { require +> Exec["sv exit ${name}"] }
     Group <||> { require +> Exec["sv exit ${name}"] }
 
   }
-  
 }
