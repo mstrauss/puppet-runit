@@ -7,9 +7,11 @@ define runit::service (
   $command = undef,      # the most simple way;  just state command here - it may not daemonize itself,
                          # but rather stay in the foreground;  all output is logged automatically to $logdir/current
                          # this uses a default template which provides logging
+  $command_use_rvm = false, # shall we load rvm environment?
   $source  = undef,      # specify a source file on your puppet master
   $content = undef,      # specify the content directly (mostly via 'template')
   # finish command - defines the content of the finish script /etc/sv/$name/finish
+  # the finish scripts runs AFTER the run script has exited; see 'man runsv'
   $finish_command = '',
   $finish_source  = undef,
   $finish_content = undef,

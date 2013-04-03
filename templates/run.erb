@@ -5,5 +5,8 @@ root=<%= rundir %>
 echo "Starting <%= name %> from ${root}"
 cd $root
 mkdir -p "${envdir}"
+<% if command_use_rvm -%>
+source /etc/profile.d/rvm.sh
+<% end -%>
 exec 2>&1
 exec chpst -e "${envdir}" -u <%= user %>:<%= group %> <%= command %>
