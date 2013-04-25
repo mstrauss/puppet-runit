@@ -1,8 +1,9 @@
 define runit::service (
   $user    = root,       # the service's user name
   $group   = root,       # the service's group name
-  $enable  = true,       # shall the service be linked to /etc/service
   $ensure  = present,    # shall the service be present in /etc/sv
+  $manage  = true,       # shall the service be managed
+  $enable  = true,       # shall the service be enabled (if managed)
   # start command - either one of these three must be declared - it defines the content of the run script /etc/sv/$name/run
   $command = undef,      # the most simple way;  just state command here - it may not daemonize itself,
                          # but rather stay in the foreground;  all output is logged automatically to $logdir/current
@@ -47,7 +48,7 @@ define runit::service (
   # creating the logging sub-service, if requested
   if $logger == true {
     runit::service{ "${name}/log":
-      user => $user, group => $group, enable => false, ensure => $ensure, logger => false,
+      user => $user, group => $group, manage => false, ensure => $ensure, logger => false,
       content => template('runit/logger_run.erb'),
     }
   }
@@ -83,9 +84,6 @@ define runit::service (
   }
 
   # eventually enabling/disabling the service
-  if $enable == true {
-    debug( "Service ${name}: ${_ensure_enabled}" )
-    runit::service::enabled { $name: ensure => $ensure, timeout => $timeout }
-  }
+  runit::service::enabled { $name: ensure => $ensure, managed => $manage, enabled => $enable, timeout => $timeout }
 
 }
